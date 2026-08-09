@@ -1,5 +1,12 @@
-# 🧩 shesha-acp
+# shesha-acp
 
+**Agent Client Protocol (ACP) server** — Shesha runs inside Zed/JetBrains with streaming + permissions.
+
+- Layer: Soma (Soma)
+- License: MIT
+- Part of: [Shesha ecosystem](https://github.com/gaganjainse/shesha-ecosystem)
+
+---
 **Agent Client Protocol (ACP) server for Shesha.** Lets the agent run inside Zed, JetBrains,
 Neovim, and other ACP editors — streaming token updates, permission requests, and scoped
 file/terminal access — while the Brain's policy still governs every action.
