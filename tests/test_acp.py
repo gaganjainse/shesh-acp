@@ -6,8 +6,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from sesha_acp import protocol as p  # noqa: E402
-from sesha_acp.server import ACPServer  # noqa: E402
+from shesha_acp import protocol as p  # noqa: E402
+from shesha_acp.server import ACPServer  # noqa: E402
 
 
 def make_server(tmp_path, **kw):
@@ -17,7 +17,7 @@ def make_server(tmp_path, **kw):
 def test_initialize_returns_capabilities():
     srv = make_server(Path("/tmp"))
     out = srv.handle(p.request(1, "initialize", {}))
-    assert out[0]["result"]["name"] == "sesha-acp"
+    assert out[0]["result"]["name"] == "shesha-acp"
     assert "fs" in out[0]["result"]["capabilities"]
 
 

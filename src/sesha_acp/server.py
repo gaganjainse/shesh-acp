@@ -73,7 +73,7 @@ class ACPServer:
     def initialize(self, params: dict) -> dict:
         return {
             "protocolVersion": 1,
-            "name": "sesha-acp",
+            "name": "shesha-acp",
             "version": "0.1.0",
             "capabilities": p.CAPABILITIES,
         }
@@ -133,5 +133,5 @@ class ACPServer:
     @staticmethod
     def _default_agent_run(prompt: str, ctx: dict):
         # Echo/placeholder so the server is usable without an LLM wired in.
-        yield {"type": "delta", "delta": f"(sesha-acp stub) received: {prompt}"}
+        yield {"type": "delta", "delta": f"(shesha-acp stub) received: {prompt}"}
         yield {"type": "done", "sessionId": ctx["session"]}

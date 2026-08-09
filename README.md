@@ -1,12 +1,12 @@
-# 🧩 sesha-acp
+# 🧩 shesha-acp
 
-**Agent Client Protocol (ACP) server for Sesha.** Lets the agent run inside Zed, JetBrains,
+**Agent Client Protocol (ACP) server for Shesha.** Lets the agent run inside Zed, JetBrains,
 Neovim, and other ACP editors — streaming token updates, permission requests, and scoped
 file/terminal access — while the Brain's policy still governs every action.
 
 - License: GPL-3.0
 - Spans: Soma (editor surface) + Mind (drives the coder agent)
-- Part of: [Sesha ecosystem](https://github.com/gaganjainse/sesha-ecosystem)
+- Part of: [Shesha ecosystem](https://github.com/gaganjainse/shesha-ecosystem)
 
 ## Scope
 
@@ -18,7 +18,7 @@ Implements a minimal, tested subset of ACP (JSON-RPC 2.0 over stdio):
 - `session/prompt` with streaming `session/update` notifications
 
 MCP is the inner layer (agent→tools); ACP is the outer layer (editor→agent). The ACP server
-spawns `sesha-orchestrator` (P1) and hands it the MCP endpoints. For now it ships with a stub
+spawns `shesha-orchestrator` (P1) and hands it the MCP endpoints. For now it ships with a stub
 agent so the protocol and policy are testable end-to-end.
 
 ## Develop
@@ -27,12 +27,12 @@ agent so the protocol and policy are testable end-to-end.
 uv sync --extra dev
 uv run pytest -q          # offline, no stdio/LLM needed
 uv run ruff check .
-uv run sesha-acp          # runs the stdio server
+uv run shesha-acp          # runs the stdio server
 ```
 
 ## Roadmap
 
 - terminal create/exec with permission prompts
-- real `sesha-orchestrator` integration (coder role, MCP endpoints)
+- real `shesha-orchestrator` integration (coder role, MCP endpoints)
 - diff/update messages for editor review
 - session persistence and A2A subagent messaging

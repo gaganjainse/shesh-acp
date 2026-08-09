@@ -1,7 +1,7 @@
 """ACP JSON-RPC message types and helpers.
 
 This is a small, typed subset of the Agent Client Protocol sufficient for an
-editor to drive Sesha. It is intentionally transport-agnostic so it can be unit
+editor to drive Shesha. It is intentionally transport-agnostic so it can be unit
 tested without stdio. See docs/ACP_A2A.md.
 """
 from __future__ import annotations
