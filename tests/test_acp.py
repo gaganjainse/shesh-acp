@@ -99,3 +99,32 @@ def test_permission_response(tmp_path):
         {"sessionId": "x", "requestId": "req1", "approved": True}))
     assert out[0]["result"]["approved"] is True
     assert s.pending_permissions["req1"] is True
+
+
+def test_terminal_exec(tmp_path):
+    from shesha_acp.server import ACPServer
+    s = ACPServer(root=tmp_path)
+    sid = s.handle({"id":1,"method":"session/new","params":{"cwd":str(tmp_path)}})[0]["result"]["sessionId"]
+    out = s.handle({"id":2,"method":"terminal/exec",
+                    "params":{"sessionId":sid,"command":"echo hello"}})
+    assert out[0]["result"]["ok"] is True
+    assert "hello" in out[0]["result"]["stdout"]
+
+
+def test_terminal_requires_confirmation_for_dangerous(tmp_path):
+    from shesha_acp.server import ACPServer
+    s = ACPServer(root=tmp_path)
+    sid = s.handle({"id":1,"method":"session/new","params":{"cwd":str(tmp_path)}})[0]["result"]["sessionId"]
+    out = s.handle({"id":2,"method":"terminal/exec",
+                    "params":{"sessionId":sid,"command":"rm -rf /"}})
+    assert out[0]["result"].get("needs_confirmation") is True
+
+
+def test_fs_diff(tmp_path):
+    from shesha_acp.server import ACPServer
+    s = ACPServer(root=tmp_path)
+    (tmp_path / "f.txt").write_text("old\n")
+    sid = s.handle({"id":1,"method":"session/new","params":{"cwd":str(tmp_path)}})[0]["result"]["sessionId"]
+    r = s.handle({"id":2,"method":"fs/diff",
+                  "params":{"sessionId":sid,"path":"f.txt","text":"new\n"}})
+    assert "---" in "\n".join(r[0]["result"]["diff"]) or len(r[0]["result"]["diff"]) > 0

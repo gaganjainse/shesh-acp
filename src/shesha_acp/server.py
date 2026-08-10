@@ -50,6 +50,8 @@ class ACPServer:
             "fs/read_text_file": self.fs_read,
             "fs/write_text_file": self.fs_write,
             "fs/list": self.fs_list,
+            "terminal/exec": self.terminal_exec,
+            "fs/diff": self.fs_diff,
             "session/prompt": self.session_prompt,
             "session/cancel": self.session_cancel,
             "session/permission_response": self.permission_response,
@@ -155,3 +157,39 @@ class ACPServer:
         # Echo/placeholder so the server is usable without an LLM wired in.
         yield {"type": "delta", "delta": f"(shesha-acp stub) received: {prompt}"}
         yield {"type": "done", "sessionId": ctx["session"]}
+
+    # ── terminal ──────────────────────────────────────────────────────
+    def terminal_exec(self, params: dict) -> dict:
+        """Run a command in the session cwd. Read-only by default unless
+        'confirm' is true (editor surfaces a permission request)."""
+        import subprocess
+        sid = params["sessionId"]
+        sess = self.sessions[sid]
+        cmd = params.get("command", "")
+        if not cmd:
+            return {"ok": False, "error": "no command"}
+        confirm = bool(params.get("confirm", False))
+        # Dangerous commands require explicit confirmation.
+        dangerous = ("rm ", "sudo", "mkfs", "dd ", "shutdown", "reboot",
+                     ">", "mv ", "chmod", "chown")
+        if any(tok in cmd for tok in dangerous) and not confirm:
+            return {"ok": False, "needs_confirmation": True,
+                    "reason": "command is potentially destructive"}
+        try:
+            p = subprocess.run(
+                cmd, shell=True, cwd=sess.cwd, capture_output=True,
+                text=True, timeout=params.get("timeout", 30))
+            return {"ok": p.returncode == 0, "exit_code": p.returncode,
+                    "stdout": p.stdout[-4000:], "stderr": p.stderr[-2000:]}
+        except subprocess.TimeoutExpired:
+            return {"ok": False, "error": "timeout"}
+
+    def fs_diff(self, params: dict) -> dict:
+        """Return a simple unified-style diff for a file vs expected text."""
+        target = self._resolve(params["sessionId"], params["path"])
+        import difflib
+        old = target.read_text().splitlines() if target.exists() else []
+        new = params.get("text", "").splitlines()
+        diff = list(difflib.unified_diff(old, new, fromfile="a/"+target.name,
+                                         tofile="b/"+target.name, lineterm=""))
+        return {"path": str(target), "diff": diff}
