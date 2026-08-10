@@ -1,7 +1,7 @@
 [project]
-name = "shesha-acp"
+name = "shesh-acp"
 version = "0.1.0"
-description = "Shesha Soma/Mind: Agent Client Protocol (ACP) server for editors (Zed/JetBrains)"
+description = "Shesh Soma/Mind: Agent Client Protocol (ACP) server for editors (Zed/JetBrains)"
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "GPL-3.0-or-later" }
@@ -12,7 +12,7 @@ dependencies = []
 dev = ["pytest>=8.0", "ruff>=0.6"]
 
 [project.scripts]
-shesha-acp = "shesha_acp.__main__:main"
+shesh-acp = "shesh_acp.__main__:main"
 
 [tool.uv]
 environments = ["sys_platform == 'linux'"]

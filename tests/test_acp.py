@@ -6,8 +6,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from shesha_acp import protocol as p  # noqa: E402
-from shesha_acp.server import ACPServer  # noqa: E402
+from shesh_acp import protocol as p  # noqa: E402
+from shesh_acp.server import ACPServer  # noqa: E402
 
 
 def make_server(tmp_path, **kw):
@@ -17,7 +17,7 @@ def make_server(tmp_path, **kw):
 def test_initialize_returns_capabilities():
     srv = make_server(Path("/tmp"))
     out = srv.handle(p.request(1, "initialize", {}))
-    assert out[0]["result"]["name"] == "shesha-acp"
+    assert out[0]["result"]["name"] == "shesh-acp"
     assert "fs" in out[0]["result"]["capabilities"]
 
 
@@ -102,7 +102,7 @@ def test_permission_response(tmp_path):
 
 
 def test_terminal_exec(tmp_path):
-    from shesha_acp.server import ACPServer
+    from shesh_acp.server import ACPServer
     s = ACPServer(root=tmp_path)
     sid = s.handle({"id":1,"method":"session/new","params":{"cwd":str(tmp_path)}})[0]["result"]["sessionId"]
     out = s.handle({"id":2,"method":"terminal/exec",
@@ -112,7 +112,7 @@ def test_terminal_exec(tmp_path):
 
 
 def test_terminal_requires_confirmation_for_dangerous(tmp_path):
-    from shesha_acp.server import ACPServer
+    from shesh_acp.server import ACPServer
     s = ACPServer(root=tmp_path)
     sid = s.handle({"id":1,"method":"session/new","params":{"cwd":str(tmp_path)}})[0]["result"]["sessionId"]
     out = s.handle({"id":2,"method":"terminal/exec",
@@ -121,7 +121,7 @@ def test_terminal_requires_confirmation_for_dangerous(tmp_path):
 
 
 def test_fs_diff(tmp_path):
-    from shesha_acp.server import ACPServer
+    from shesh_acp.server import ACPServer
     s = ACPServer(root=tmp_path)
     (tmp_path / "f.txt").write_text("old\n")
     sid = s.handle({"id":1,"method":"session/new","params":{"cwd":str(tmp_path)}})[0]["result"]["sessionId"]
