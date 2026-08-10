@@ -32,6 +32,7 @@ class Session:
     cwd: str
     allow: set[str] = field(default_factory=set)
     history: list[dict[str, Any]] = field(default_factory=list)
+    cancelled: bool = False
 
 
 def request(id: int | str, method: str, params: dict | None = None) -> dict:

@@ -33,6 +33,7 @@ class ACPServer:
         self.policy = policy or (lambda kind: "ask")
         self.root = root or Path.cwd()
         self.sessions: dict[str, p.Session] = {}
+        self.pending_permissions: dict[str, bool] = {}
 
     # ── dispatch ──────────────────────────────────────────────────────────
     def handle(self, msg: dict) -> list[dict]:
@@ -50,6 +51,8 @@ class ACPServer:
             "fs/write_text_file": self.fs_write,
             "fs/list": self.fs_list,
             "session/prompt": self.session_prompt,
+            "session/cancel": self.session_cancel,
+            "session/permission_response": self.permission_response,
         }.get(method)
 
         if handler is None:
@@ -129,6 +132,23 @@ class ACPServer:
             u.get("delta", "") for u in out if u["method"] == "session/update"
         )})
         return out
+
+    def session_cancel(self, params: dict) -> dict:
+        sid = params["sessionId"]
+        if sid in self.sessions:
+            self.sessions[sid].cancelled = True
+        return {"ok": True}
+
+    def permission_response(self, params: dict) -> dict:
+        sid = params["sessionId"]
+        request_id = params.get("requestId")
+        approved = bool(params.get("approved", False))
+        self.pending_permissions[request_id] = approved
+        if sid in self.sessions:
+            self.sessions[sid].history.append(
+                {"role": "user",
+                 "content": f"[permission {request_id}: {'approved' if approved else 'denied'}]"})
+        return {"ok": True, "requestId": request_id, "approved": approved}
 
     @staticmethod
     def _default_agent_run(prompt: str, ctx: dict):

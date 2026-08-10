@@ -82,3 +82,20 @@ def test_notifications_have_no_id():
     n = p.notification("x", {"a": 1})
     assert "id" not in n
     assert n["method"] == "x"
+
+
+def test_session_cancel(tmp_path):
+    s = make_server(tmp_path)
+    r = s.handle(p.request(1, "session/new", {"cwd": str(tmp_path)}))
+    sid = r[0]["result"]["sessionId"]
+    out = s.handle(p.request(2, "session/cancel", {"sessionId": sid}))
+    assert out[0]["result"]["ok"] is True
+    assert s.sessions[sid].cancelled
+
+
+def test_permission_response(tmp_path):
+    s = make_server(tmp_path)
+    out = s.handle(p.request(1, "session/permission_response",
+        {"sessionId": "x", "requestId": "req1", "approved": True}))
+    assert out[0]["result"]["approved"] is True
+    assert s.pending_permissions["req1"] is True
