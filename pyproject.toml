@@ -26,7 +26,6 @@ select = ["E", "F", "W", "UP", "B", "SIM", "I"]
 ignore = ["E402"]
 
 [tool.pytest.ini_options]
-filterwarnings = ["ignore:.*lifespan.*:pydantic_settings.exceptions.IncompleteFieldDefinitionWarning"]
 
 pythonpath = ["src"]
 testpaths = ["tests"]
