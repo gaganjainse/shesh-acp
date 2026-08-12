@@ -43,3 +43,8 @@ uv run shesh-acp          # runs the stdio server
 - real `shesh-orchestrator` integration (coder role, MCP endpoints)
 - diff/update messages for editor review
 - session persistence and A2A subagent messaging
+
+## Security
+
+Security posture and vulnerability reporting: [canonical ecosystem security
+policy](https://github.com/gaganjainse/shesh-ecosystem/blob/main/SECURITY.md).
