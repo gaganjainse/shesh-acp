@@ -9,7 +9,7 @@ authors = [{ name = "Gagan Jain" }]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "ruff>=0.6"]
+dev = ["pytest>=9.1", "ruff>=0.16"]
 
 [project.scripts]
 shesh-acp = "shesh_acp.__main__:main"
