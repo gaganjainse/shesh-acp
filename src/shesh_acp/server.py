@@ -20,6 +20,13 @@ INVALID_PARAMS = -32602
 INTERNAL_ERROR = -32603
 
 
+class PathEscapeError(PermissionError):
+    """A session-relative path resolved outside the session root."""
+
+    def __init__(self, path: str) -> None:
+        super().__init__(f"path escapes session root: {path}")
+
+
 class ACPServer:
     def __init__(
         self,
@@ -95,7 +102,7 @@ class ACPServer:
         root = Path(sess.cwd).resolve()
         pth = (root / path).resolve() if not Path(path).is_absolute() else Path(path).resolve()
         if root not in pth.parents and pth != root:
-            raise PermissionError(f"path escapes session root: {path}")
+            raise PathEscapeError(path)
         return pth
 
     def fs_read(self, params: dict) -> dict:
