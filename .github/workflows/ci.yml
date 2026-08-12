@@ -11,4 +11,4 @@ permissions: read-all
 
 jobs:
   component:
-    uses: gaganjainse/shesh-ecosystem/.github/workflows/component-ci.yml@main
+    uses: gaganjainse/shesh-ecosystem/.github/workflows/component-ci.yml@a2d13d4f6ab0d3685722824420a1fca588230525  # main — reusable pipeline; Dependabot moves the pin
