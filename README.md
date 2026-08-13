@@ -1,3 +1,5 @@
+> ⚠️ **Consolidated into [shesh-core](https://github.com/gaganjainse/shesh-core)** — this module now lives in the shesh-core monorepo (same package name, same console script). Archived 2026-08-13.
+
 # shesh-acp
 
 **Agent Client Protocol (ACP) server** — Shesh runs inside Zed/JetBrains with streaming + permissions.
