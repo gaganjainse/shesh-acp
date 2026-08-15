@@ -1,52 +1,35 @@
->  **Consolidated into [shesh-core](https://github.com/gaganjainse/shesh-core)** — this module now lives in the shesh-core monorepo (same package name, same console script). Archived 2026-08-13.
-
 # shesh-acp
 
-**Agent Client Protocol (ACP) server** — Shesh runs inside Zed/JetBrains with streaming + permissions.
+> **Superseded by [shesh-core](https://github.com/gaganjainse/shesh-core).**
+> This repository is a tombstone: its history is preserved, its source is not.
 
-- Layer: Soma (Soma)
-- License: MIT
-- Part of: [Shesh ecosystem](https://github.com/gaganjainse/shesh-ecosystem)
+## What happened
 
----
-**Agent Client Protocol (ACP) server for Shesh.** Lets the agent run inside Zed, JetBrains,
-Neovim, and other ACP editors — streaming token updates, permission requests, and scoped
-file/terminal access — while the Brain's policy still governs every action.
+[ADR-0019](https://github.com/gaganjainse/shesh-docs/blob/main/src/governance/adr/0019-shesh-core-monorepo.md)
+consolidated the single-module services into one repository. A module of a few
+hundred lines is not a service: each one carried its own build configuration,
+pipeline, and security policy, and those drifted apart from each other.
 
-- License: GPL-3.0
-- Spans: Soma (editor surface) + Mind (drives the coder agent)
-- Part of: [Shesh ecosystem](https://github.com/gaganjainse/shesh-ecosystem)
+The code now lives in `shesh-core` as the `shesh_acp` package, with
+the same import path and the same console script.
 
-## Scope
+## Why the source was removed
 
-Implements a minimal, tested subset of ACP (JSON-RPC 2.0 over stdio):
+Two copies of the same module drift. Keeping the code here meant a reader could
+find it, edit it, and have the change silently ignored by everything that
+actually runs.
 
-- `initialize` capability negotiation
-- `session/new`
-- `fs/read_text_file`, `fs/write_text_file`, `fs/list` (path-traversal safe, policy-gated)
-- `session/prompt` with streaming `session/update` notifications
+The history remains in this repository's git log. Nothing was lost.
 
-MCP is the inner layer (agent→tools); ACP is the outer layer (editor→agent). The ACP server
-spawns `shesh-orchestrator` (P1) and hands it the MCP endpoints. For now it ships with a stub
-agent so the protocol and policy are testable end-to-end.
-
-## Develop
+## Installing
 
 ```bash
-uv sync --extra dev
-uv run pytest -q          # offline, no stdio/LLM needed
-uv run ruff check .
-uv run shesh-acp          # runs the stdio server
+pipx install git+https://github.com/gaganjainse/shesh-core.git
 ```
 
-## Roadmap
+Console script names are unchanged, so existing client configuration keeps
+working.
 
-- terminal create/exec with permission prompts
-- real `shesh-orchestrator` integration (coder role, MCP endpoints)
-- diff/update messages for editor review
-- session persistence and A2A subagent messaging
+## Licence
 
-## Security
-
-Security posture and vulnerability reporting: [canonical ecosystem security
-policy](https://github.com/gaganjainse/shesh-ecosystem/blob/main/SECURITY.md).
+GPL-3.0-or-later.
